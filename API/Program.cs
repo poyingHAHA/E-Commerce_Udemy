@@ -1,4 +1,4 @@
-using API.Data;
+using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
