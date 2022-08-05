@@ -33,12 +33,11 @@ namespace API.Middleware
                 // this basically means that we're going to set the status code to be a five hundred internal server
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-                var response = _env.IsDevelopment() 
-                ? new ApiException((int)HttpStatusCode.InternalServerError, ex.Message, ex.StackTrace.ToString())
-                : new ApiResponse((int) HttpStatusCode.InternalServerError);
+                var response = _env.IsDevelopment() ? new ApiException((int)HttpStatusCode.InternalServerError, ex.Message, details: ex.StackTrace.ToString())
+                : new ApiException((int)HttpStatusCode.InternalServerError, ex.Message, details: ex.StackTrace.ToString());
 
                 var options = new JsonSerializerOptions{PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
-
+                
                 var json = JsonSerializer.Serialize(response, options);
                 await context.Response.WriteAsync(json);
             }
