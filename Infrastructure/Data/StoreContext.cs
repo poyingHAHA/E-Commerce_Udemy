@@ -11,6 +11,8 @@ namespace Infrastructure.Data
     {
         // the prop name Products will be the table name in the database
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductBrand> ProductBrands{ get; set; }
+        public DbSet<ProductType> ProductTypes { get; set; }
 
         public StoreContext(DbContextOptions<StoreContext> options) : base(options)
         {
