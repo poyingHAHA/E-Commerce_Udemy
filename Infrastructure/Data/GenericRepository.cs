@@ -4,19 +4,28 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Entities;
 using Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data
 {
     public class GenericRepository<T> : IGenericRepositiry<T> where T : BaseEntity
     {
-        public Task<T> GetByIdAsync(long id)
+        private readonly StoreContext context;
+
+        public GenericRepository(StoreContext context)
         {
-            throw new NotImplementedException();
+            this.context = context;
         }
 
-        public Task<IReadOnlyList<T>> ListAllAsync()
+        public async Task<T> GetByIdAsync(long id)
         {
-            throw new NotImplementedException();
+            // Set method create a dbDet that can be used to query and save instances of the type of entity for which a set should be return
+            return await this.context.Set<T>().FindAsync(id);
+        }
+
+        public async Task<IReadOnlyList<T>> ListAllAsync()
+        {
+            return await this.context.Set<T>().ToListAsync();
         }
     }
 }
