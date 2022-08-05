@@ -1,5 +1,6 @@
 using System.Linq;
 using API.Errors;
+using API.Extensions;
 using API.Helpers;
 using API.Middleware;
 using Core.Interfaces;
@@ -16,30 +17,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerDocumentation();
 
 builder.Services.AddDbContext<StoreContext>(opt => {
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped(typeof(IGenericRepositiry<>), typeof(GenericRepository<>));
-builder.Services.AddAutoMapper(typeof(MappingProfiles));
-// configure ApiController Attribute
-builder.Services.Configure<ApiBehaviorOptions>(opt => {
-    opt.InvalidModelStateResponseFactory = actionContext => 
-    {
-        var errors = actionContext.ModelState.Where(e => e.Value.Errors.Count > 0)
-                                            .SelectMany(x => x.Value.Errors)
-                                            .Select(x => x.ErrorMessage).ToArray();
-        
-        var errorResponse = new ApiValidationErrorResponse
-        {
-            Errors = errors,
-        };
 
-        return new BadRequestObjectResult(errorResponse);
-    };
-});
+builder.Services.AddApplicationServices();
+
+builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
 var app = builder.Build();
 
@@ -64,8 +50,7 @@ using(var scope = app.Services.CreateScope())
 
 // Configure the HTTP request pipeline.
 app.UseMiddleware<ExceptionMiddleware>();
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerDocumention();
 
 app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
