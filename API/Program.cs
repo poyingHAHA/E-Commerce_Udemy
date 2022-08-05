@@ -1,9 +1,13 @@
+using System.Linq;
+using API.Errors;
 using API.Helpers;
 using API.Middleware;
 using Core.Interfaces;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +24,22 @@ builder.Services.AddDbContext<StoreContext>(opt => {
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped(typeof(IGenericRepositiry<>), typeof(GenericRepository<>));
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
+// configure ApiController Attribute
+builder.Services.Configure<ApiBehaviorOptions>(opt => {
+    opt.InvalidModelStateResponseFactory = actionContext => 
+    {
+        var errors = actionContext.ModelState.Where(e => e.Value.Errors.Count > 0)
+                                            .SelectMany(x => x.Value.Errors)
+                                            .Select(x => x.ErrorMessage).ToArray();
+        
+        var errorResponse = new ApiValidationErrorResponse
+        {
+            Errors = errors,
+        };
+
+        return new BadRequestObjectResult(errorResponse);
+    };
+});
 
 var app = builder.Build();
 
