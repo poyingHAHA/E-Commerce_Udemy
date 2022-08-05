@@ -29,6 +29,7 @@ using(var scope = app.Services.CreateScope())
         var context = services.GetRequiredService<StoreContext>();
         // This is going to apply any pending migrations for the context to the database and it will create the database if it does not already exist.
         await context.Database.MigrateAsync();
+        await StoreContextSeed.SeedAsync(context, loggerFactory);
     }
     catch(Exception ex)
     {
