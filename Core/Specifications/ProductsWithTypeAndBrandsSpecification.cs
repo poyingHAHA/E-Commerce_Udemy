@@ -9,18 +9,19 @@ namespace Core.Specifications
 {
     public class ProductsWithTypeAndBrandsSpecification : BaseSpecification<Product>
     {
-        public ProductsWithTypeAndBrandsSpecification(string sort, int? brandId, int? typeId) 
+        public ProductsWithTypeAndBrandsSpecification(ProductSpecParams productParams) 
         : base(x => // 加!基本上沒太大意義，但是可以增加效能，因為如果值是null就可以不用執行||後面的語句
-            (!brandId.HasValue || x.ProductBrandId == brandId) && (!typeId.HasValue || x.ProductTypeId == typeId) 
+            (!productParams.BrandId.HasValue || x.ProductBrandId == productParams.BrandId) && (!productParams.TypeId.HasValue || x.ProductTypeId == productParams.TypeId) 
         )
         {
             AddInclude(x => x.ProductType);
             AddInclude(x => x.ProductBrand);
             AddOrderBy(x => x.Name);
+            ApplyPaging(productParams.PageSize * (productParams.PageIndex - 1), productParams.PageSize);
 
-            if(!string.IsNullOrEmpty(sort))
+            if(!string.IsNullOrEmpty(productParams.Sort))
             {
-                switch(sort)
+                switch(productParams.Sort)
                 {
                     case "priceAsc":
                         AddOrderBy(p => p.Price);
