@@ -28,6 +28,13 @@ namespace Infrastructure.Data
                 query = query.OrderByDescending(spec.OrderByDescending);
             }
 
+            // the ordering of this is important because if we're filtering our results early on, then we wouldn't
+            // page our results before we know what results we're returning.
+            if(spec.IsPagingEnabled)
+            {
+                query = query.Skip(spec.Skip).Take(spec.Take);
+            }
+
             query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
             return query;
         }
