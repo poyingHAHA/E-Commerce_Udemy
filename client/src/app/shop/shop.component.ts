@@ -1,5 +1,5 @@
 import { IProduct } from '../shared/models/product';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ShopService } from './shop.service';
 import { IBrand } from '../shared/models/brand';
 import { IType } from '../shared/models/productType';
@@ -11,6 +11,9 @@ import { ShopParams } from '../shared/models/shopParams';
   styleUrls: ['./shop.component.scss']
 })
 export class ShopComponent implements OnInit {
+  // our search input's, property or field, is a child of our shop component.
+  // It's in our template and we want to access this particular input from the shop component.
+  @ViewChild('search', {static: true}) searchTerm: ElementRef; // in this case, we are going to specify that this is a static element that's not relying on any dynamic activity.
   products: IProduct[];
   brands: IBrand[];
   types: IType[];
@@ -84,6 +87,17 @@ export class ShopComponent implements OnInit {
 
   onPageChanged(event: any){
     this.shopParams.pageNumber = event;
+    this.getProducts();
+  }
+
+  onSearch(){
+    this.shopParams.search = this.searchTerm.nativeElement.value;
+    this.getProducts();
+  }
+
+  onReset(){
+    this.searchTerm.nativeElement.value = '';
+    this.shopParams = new ShopParams();
     this.getProducts();
   }
 }

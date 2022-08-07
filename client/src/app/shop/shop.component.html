@@ -41,9 +41,11 @@
         ></app-paging-header>
 
         <div class="form-inline mt-2">
-          <input type="text" style="width: 300px" class="form-control mr-2" placeholder="Search">
-          <button class="btn btn-outline-primary my-2">Searh</button>
-          <button class="btn btn-outline-success ml-2">Reset</button>
+          <!-- To get access to this input element from out component, We're going to give this a template reference variable.
+              And we do that by adding the hash tag and then we'll just call it search and then we'll be able to access this from inside our component -->
+          <input (keyup.enter)="onSearch()" type="text" style="width: 300px" #search class="form-control mr-2" placeholder="Search">
+          <button class="btn btn-outline-primary my-2" (click)="onSearch()">Search</button>
+          <button class="btn btn-outline-success ml-2" (click)="onReset()">Reset</button>
         </div>
       </div>
 
