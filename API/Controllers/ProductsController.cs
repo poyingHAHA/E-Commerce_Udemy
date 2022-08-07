@@ -38,7 +38,7 @@ namespace API.Controllers
         public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery]ProductSpecParams productParams) // default is [FromBody]
         {
             var spec = new ProductsWithTypeAndBrandsSpecification(productParams);
-            var countSpec = new ProductsWithTypeAndBrandsSpecification(productParams);
+            var countSpec = new ProductWithFiltersForCountSpecification(productParams);
 
             var totalItems = await this.productRepo.CountAsync(countSpec);
 
