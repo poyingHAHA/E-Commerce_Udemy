@@ -42,8 +42,8 @@
       <div class="row">
         <!-- When we see an Asterix in front of an angular command, this means it's an angular directive
           and the asterisks means it's going to change the DOM on our html. So it's going to add things in in this case.-->
-        <div class="col-4" *ngFor="let product of products">
-          <app-product-item></app-product-item>
+        <div class="col-4 mb-4" *ngFor="let item of products">
+          <app-product-item [product]="item"></app-product-item>
         </div>
       </div>
     </section>
