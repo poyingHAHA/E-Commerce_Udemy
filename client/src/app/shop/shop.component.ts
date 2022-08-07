@@ -1,6 +1,8 @@
 import { IProduct } from '../shared/models/product';
 import { Component, OnInit } from '@angular/core';
 import { ShopService } from './shop.service';
+import { IBrand } from '../shared/models/brand';
+import { IType } from '../shared/models/productType';
 
 @Component({
   selector: 'app-shop',
@@ -9,11 +11,19 @@ import { ShopService } from './shop.service';
 })
 export class ShopComponent implements OnInit {
   products: IProduct[];
+  brands: IBrand[];
+  types: IType[];
+
 
   constructor(private shopService: ShopService) { }
 
   ngOnInit() {
-    // we have to subscribe so that we actually execute the call to the API, if we don't subscribe nothing happend
+    this.getProducts();
+    this.getBrands();
+    this.getTypes();
+  }
+
+  getProducts(){
     this.shopService.getProducts().subscribe({
       next: response => {
         this.products = response.data;
@@ -21,7 +31,28 @@ export class ShopComponent implements OnInit {
       error: error => {
         console.log(error);
       }
+    });
+  }
+
+  getBrands(){
+    this.shopService.getBrands().subscribe({
+      next: response => {
+        this.brands = response;
+      },
+      error: error => {
+        console.log(error);
+      }
     })
   }
 
+  getTypes(){
+    this.shopService.getTypes().subscribe({
+      next: response => {
+        this.types = response;
+      },
+      error: error => {
+        console.log(error);
+      }
+    })
+  }
 }
