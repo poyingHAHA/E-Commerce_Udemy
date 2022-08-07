@@ -2,10 +2,10 @@
   <div class="row">
     <section class="col-3">
       <h5 class="text-warning ml-3">Sort</h5>
-      <select class="custom-select mb-2">
-        <option>Alphabetical</option>
-        <option>Price: Low to High</option>
-        <option>Price: High to Low</option>
+      <select class="custom-select mb-2" (change)="onSortSelected($event.target.value)" > <!-- what we want for this is a change event because as soon as the dropdown is selected, we want this to fire the particular event we're looking for.-->
+        <option *ngFor="let sort of sortOptions" [value]="sort.value">
+          {{sort.name}}
+        </option>
       </select>
 
       <h5 class="text-warning ml-3">Brands</h5>
