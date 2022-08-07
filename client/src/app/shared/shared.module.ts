@@ -1,9 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {PaginationModule} from 'ngx-bootstrap/pagination';
+import { PagingHeaderComponent } from './components/paging-header/paging-header.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    PagingHeaderComponent
+  ],
   imports: [
     CommonModule,
     // anything that we add to our shared module, we also need to export because we're going to be importing
@@ -13,6 +16,9 @@ import {PaginationModule} from 'ngx-bootstrap/pagination';
     // those providers need to be injected into our root module at startup. And if we take off the four routes,
     // then it won't load with its providers and will have errors.
   ],
-  exports: [PaginationModule]
+  exports: [
+    PaginationModule,
+    PagingHeaderComponent
+  ]
 })
 export class SharedModule { }
