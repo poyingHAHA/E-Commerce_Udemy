@@ -10,6 +10,9 @@ import { ShopComponent } from './shop.component';
   ],
   imports: [
     CommonModule
+  ],
+  exports: [
+    ShopComponent // in order to make use of it in app module, we're going to need to export it from here.
   ]
 })
 export class ShopModule { }

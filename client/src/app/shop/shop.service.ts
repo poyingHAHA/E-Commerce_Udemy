@@ -10,7 +10,7 @@ export class ShopService {
 
   constructor(private http:HttpClient) { }
 
-  getProduct(){
-    return this.http.get<IPagination>(this.baseUrl + '/products')
+  getProducts(){
+    return this.http.get<IPagination>(this.baseUrl + 'products?pagesize=50')
   }
 }
