@@ -5,7 +5,7 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, throwError, delay } from 'rxjs';
 import { NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
@@ -19,6 +19,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     // what we're going to want to do is catch any errors inside the response coming back from our API.
     // And that will give us an opportunity to do something with the particular errors.
     return next.handle(request).pipe(
+      delay(500), // simulate reality
       catchError(error => {
         if(error){
           if(error.status === 400){
