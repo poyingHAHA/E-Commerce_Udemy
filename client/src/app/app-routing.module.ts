@@ -1,5 +1,4 @@
 import { TestErrorComponent } from './core/test-error/test-error.component';
-import { ProductDetailsComponent } from './shop/product-details/product-details.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
