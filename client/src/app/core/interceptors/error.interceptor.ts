@@ -6,7 +6,7 @@ import {
   HttpInterceptor
 } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 // If we don't make this injectable, then it's never able to be utilized and will never handle our errors.
@@ -35,7 +35,9 @@ export class ErrorInterceptor implements HttpInterceptor {
             this.router.navigateByUrl('/not-found');
           }
           if(error.status === 500){
-            this.router.navigateByUrl('/server-error');
+            // state that's the name of the objects that we're using to store the exception we're going to pass in.
+            const navigationExtras: NavigationExtras ={ state: {error: error.error}};
+            this.router.navigateByUrl('/server-error', navigationExtras);
           }
         }
         return throwError(() => error);
