@@ -7,6 +7,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { ServerErrorComponent } from './server-error/server-error.component';
 import { ToastrModule } from 'ngx-toastr';
 import { SectionHeaderComponent } from './section-header/section-header.component';
+import { BreadcrumbModule } from 'xng-breadcrumb';
 
 
 
@@ -18,7 +19,8 @@ import { SectionHeaderComponent } from './section-header/section-header.componen
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right',
       preventDuplicates: true // prevent duplicate toasts.
-    })
+    }),
+    BreadcrumbModule
   ],
   exports: [
     NavBarComponent,
