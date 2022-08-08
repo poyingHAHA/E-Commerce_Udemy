@@ -1,11 +1,13 @@
 <div class="d-flex flex-column flex-md-row align-items-center justify-content-between p-3 px-md-4 bg-white border-bottom shadow-sm fixed-top">
-  <img src="/assets/images/logo.png" alt="max-hright: 70px;" alt="logo" routerLink="/">
+  <img src="/assets/images/logo.png" alt="max-hright: 70px;" alt="logo" class="logo" routerLink="/">
 
   <nav class="my-2 my-md-0 mr-md-3 text-uppercase" style="font-size: larger;">
     <!-- two way of binding routerlink both work -->
-    <a class="p-2 text-dark" [routerLink]="['/']" >Home</a>
-    <a class="p-2 text-dark" routerLink="/shop" >Shop</a>
-    <a class="p-2 text-dark" href="#">Contact</a>
+    <!-- routerLinkActive is tell it what class to apply when the route is active.
+        And what we want to do here is just specify active, which is a bootstrap class. -->
+    <a class="p-2 " [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" >Home</a>
+    <a class="p-2 " routerLink="/shop" routerLinkActive="active">Shop</a>
+    <a class="p-2 " href="#">Contact</a>
   </nav>
 
   <div class="d-flex align-items-center">
