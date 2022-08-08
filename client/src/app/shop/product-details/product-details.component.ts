@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { IProduct } from 'src/app/shared/models/product';
+import { ShopService } from '../shop.service';
 
 @Component({
   selector: 'app-product-details',
@@ -6,10 +9,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./product-details.component.scss']
 })
 export class ProductDetailsComponent implements OnInit {
+  product: IProduct;
 
-  constructor() { }
+  // ActivatedRoute gives us access to the routes parameters so we can get the routes that we're activating and use this information to pass it as the id of the product to our API.
+  constructor(private shopService: ShopService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.loadProduct()
+  }
+
+  loadProduct(){
+    this.shopService.getProduct(+this.activatedRoute.snapshot.paramMap.get('id')).subscribe({
+      next: product => {
+        this.product = product;
+      },
+      error: error => {console.log(error)}
+    })
   }
 
 }
