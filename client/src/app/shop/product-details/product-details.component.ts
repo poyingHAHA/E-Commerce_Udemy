@@ -13,7 +13,9 @@ export class ProductDetailsComponent implements OnInit {
   product: IProduct;
 
   // ActivatedRoute gives us access to the routes parameters so we can get the routes that we're activating and use this information to pass it as the id of the product to our API.
-  constructor(private shopService: ShopService, private activatedRoute: ActivatedRoute, private bcService: BreadcrumbService) { }
+  constructor(private shopService: ShopService, private activatedRoute: ActivatedRoute, private bcService: BreadcrumbService) {
+    this.bcService.set('@productDetails', ' ')
+  }
 
   ngOnInit(): void {
     this.loadProduct()

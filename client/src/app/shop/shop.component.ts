@@ -13,7 +13,7 @@ import { ShopParams } from '../shared/models/shopParams';
 export class ShopComponent implements OnInit {
   // our search input's, property or field, is a child of our shop component.
   // It's in our template and we want to access this particular input from the shop component.
-  @ViewChild('search', {static: true}) searchTerm: ElementRef; // in this case, we are going to specify that this is a static element that's not relying on any dynamic activity.
+  @ViewChild('search', {static: false}) searchTerm: ElementRef;
   products: IProduct[];
   brands: IBrand[];
   types: IType[];
