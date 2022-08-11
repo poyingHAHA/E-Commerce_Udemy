@@ -36,6 +36,8 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(c => {
 
 builder.Services.AddApplicationServices();
 
+builder.Services.AddIdentityServices();
+
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
 builder.Services.AddCors();
