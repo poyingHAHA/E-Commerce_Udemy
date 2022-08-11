@@ -5,6 +5,7 @@ using API.Helpers;
 using API.Middleware;
 using Core.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +23,10 @@ builder.Services.AddSwaggerDocumentation();
 
 builder.Services.AddDbContext<StoreContext>(opt => {
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+builder.Services.AddDbContext<AppIdentityDbContext>(opt => {
+    opt.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection"));
 });
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(c => {
