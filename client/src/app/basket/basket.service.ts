@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { IBasket } from '../shared/models/basket';
+import { Basket, IBasket, IBasketItem } from '../shared/models/basket';
+import { IProduct } from '../shared/models/product';
 
 @Injectable({
   providedIn: 'root'
@@ -42,4 +43,43 @@ export class BasketService {
     return this.basketSource.value;
   }
 
+  addItemToBasket(item: IProduct, quantity = 1){
+    const itemToAdd: IBasketItem = this.mapProductItemToBasketItem(item, quantity);
+    const basket = this.getCurrentBasketValue() ?? this.createBasket();
+    basket.items = this.addOrUpdateItem(basket.items, itemToAdd, quantity);
+    this.setBasket(basket);
+  }
+
+  addOrUpdateItem(items: IBasketItem[], itemToAdd: IBasketItem, quantity: number): IBasketItem[] {
+    const index = items.findIndex(i => i.id === itemToAdd.id);
+    if(index === -1){
+      itemToAdd.quantity = quantity;
+      items.push(itemToAdd);
+    }
+    else{
+      items[index].quantity += quantity;
+    }
+
+    return items;
+  }
+
+  private createBasket(): IBasket {
+    const basket = new Basket();
+    // As long as the user doesn't clear out their local storage, then we'll be able to go and retrieve their baskets.
+    // Even if they close the browser, restart their computer, will be able to retrieve this basket because
+    // local storage persists even after the browsers closed down or the computer is restarted.
+    localStorage.setItem('basket_id', basket.id);
+    return basket;
+  }
+  mapProductItemToBasketItem(item: IProduct, quantity: number): IBasketItem {
+    return {
+      id: item.id,
+      productName: item.name,
+      price: item.price,
+      pictureUrl: item.pictureUrl,
+      quantity,
+      brand: item.productBrand,
+      type: item.productType
+    }
+  }
 }

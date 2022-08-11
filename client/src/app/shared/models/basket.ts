@@ -15,7 +15,7 @@ export interface IBasket {
   items: IBasketItem[];
 }
 
-export class Bastket implements IBasket{
+export class Basket implements IBasket{
   // whenever we create a new instance of the basket, it's going to have a unique identifier and it's going to have an empty array of items.
   id = uuidv4();
   items: IBasketItem[];
