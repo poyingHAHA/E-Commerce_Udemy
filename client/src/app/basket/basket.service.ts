@@ -27,12 +27,13 @@ export class BasketService {
   }
 
   setBasket(basket: IBasket){
-    return this.http.post(this.baseUrl + 'basket', basket).subscribe(
-      (response: IBasket) => {
-        this.basketSource.next(response);
-      },
-      error => {
-        console.log(error);
+    return this.http.post(this.baseUrl + 'basket', basket).subscribe({
+        next: (response: IBasket) => {
+          this.basketSource.next(response);
+        },
+        error: error => {
+          console.log(error);
+        }
       }
     )
   }
