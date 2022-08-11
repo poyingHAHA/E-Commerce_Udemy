@@ -28,7 +28,7 @@ namespace Infrastructure.Identity
                     }
                 };
 
-                await userManager.CreateAsync(user, "Pa$$word");
+                await userManager.CreateAsync(user, "Pa$$w0rd");
             }
         }
     }
