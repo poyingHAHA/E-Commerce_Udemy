@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Basket, IBasket, IBasketItem } from '../shared/models/basket';
+import { Basket, IBasket, IBasketItem, IBasketTotals } from '../shared/models/basket';
 import { IProduct } from '../shared/models/product';
 
 @Injectable({
@@ -16,14 +16,16 @@ export class BasketService {
   // Now, this is private, so what we're going to need is a public property that's going to be accessible by other components in our application.
   // So what we'll do is we'll say basket's and to make it clear that this is an observable will add the $ onto it.
   basket$ = this.basketSource.asObservable();
+  private basketTotalSource = new BehaviorSubject<IBasketTotals>(null);
+  basketTotal$ = this.basketTotalSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
   getBasket(id: string){
     return this.http.get(this.baseUrl + 'basket?id=' + id).pipe(
       map((basket: IBasket) => {
-        this.basketSource.next(basket)
-        console.log(this.getCurrentBasketValue());
+        this.basketSource.next(basket);
+        this.calculateTotals();
       })
     );
   }
@@ -32,7 +34,7 @@ export class BasketService {
     return this.http.post(this.baseUrl + 'basket', basket).subscribe({
         next: (response: IBasket) => {
           this.basketSource.next(response);
-          console.log(response);
+          this.calculateTotals();
         },
         error: error => {
           console.log(error);
@@ -55,7 +57,15 @@ export class BasketService {
     this.setBasket(basket);
   }
 
-  addOrUpdateItem(items: IBasketItem[], itemToAdd: IBasketItem, quantity: number): IBasketItem[] {
+  private calculateTotals(){
+    const basket = this.getCurrentBasketValue();
+    const shipping = 0;
+    const subTotal = basket.items.reduce((a, b) => (b.price * b.quantity) + a, 0);
+    const total = subTotal + shipping;
+    this.basketTotalSource.next({shipping, total, subTotal});
+  }
+
+  private addOrUpdateItem(items: IBasketItem[], itemToAdd: IBasketItem, quantity: number): IBasketItem[] {
     // console.log(items)
     const index = items.findIndex(i => i.id === itemToAdd.id);
     if(index === -1){
@@ -77,6 +87,7 @@ export class BasketService {
     localStorage.setItem('basket_id', basket.id);
     return basket;
   }
+
   mapProductItemToBasketItem(item: IProduct, quantity: number): IBasketItem {
     return {
       id: item.id,
