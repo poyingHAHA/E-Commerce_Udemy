@@ -40,6 +40,9 @@ export class BasketService {
   }
 
   getCurrentBasketValue(){
+    // A Subject or Observable doesn't have a current value. When a value is emitted, it is passed to subscribers and the Observable is done with it.
+    // If you want to have a current value, use BehaviorSubject which is designed for exactly that purpose.
+    // BehaviorSubject keeps the last emitted value and emits it immediately to new subscribers.
     return this.basketSource.value;
   }
 
