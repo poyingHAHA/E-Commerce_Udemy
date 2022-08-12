@@ -30,8 +30,11 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
-            var email = HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-            var user = await this.userManager.FindByEmailAsync(email);
+            // We do not have the httpContext, it's actually null when we construct our controller.
+            // So we only have access to this a littlr bit later on when we're inside our controller itself and it's already been created. 
+            // So we do have to do this inside our methods in the controller.
+            // var email = HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+            var user = await this.userManager.FindByEmailFromClaimsPrinciple(HttpContext.User);
 
             return new UserDto
             {
@@ -51,8 +54,8 @@ namespace API.Controllers
         [HttpGet("address")]
         public async Task<ActionResult<Address>> GetUserAddress()
         {
-            var email = HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-            var user = await this.userManager.FindByEmailAsync(email);
+            // var email = HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+            var user = await this.userManager.FindByUserByEmailWithAddressAsync(HttpContext.User);
 
             return user.Address;
         }
