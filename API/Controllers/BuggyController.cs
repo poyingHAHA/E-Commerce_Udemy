@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Errors;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -50,6 +51,13 @@ namespace API.Controllers
         public ActionResult GetNotFoundRequest(long id)
         {
             return Ok();
+        }
+
+        [HttpGet("testauth")]
+        [Authorize] // we won't be able to access this unless we send a valid JWT token to our server. It's going to validate the signature is going to validate the issuer.
+        public ActionResult<string> GetSecretText()
+        {
+            return "secret stuff";
         }
 
     }
