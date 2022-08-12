@@ -38,7 +38,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(c => {
 
 builder.Services.AddApplicationServices();
 
-builder.Services.AddIdentityServices();
+builder.Services.AddIdentityServices(builder.Configuration);
 
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
@@ -82,6 +82,7 @@ app.UseStaticFiles();
 
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
