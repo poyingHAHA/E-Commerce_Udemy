@@ -68,7 +68,7 @@ namespace API.Controllers
         public async Task<ActionResult<AddressDto>> UpdateUserAddress(AddressDto address)
         {
             var user = await this.userManager.FindByUserByClaimsPrincipleWithAddressAsync(HttpContext.User);
-
+            
             user.Address = this.mapper.Map<AddressDto, Address>(address);
 
             var result = await this.userManager.UpdateAsync(user);
