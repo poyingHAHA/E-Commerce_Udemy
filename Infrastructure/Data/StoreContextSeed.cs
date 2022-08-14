@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Core.Entities;
+using Core.Entities.OrderAggregate;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Data
@@ -52,6 +53,20 @@ namespace Infrastructure.Data
                     foreach (var product in products)
                     {
                         context.Products.Add(product);
+                    }
+                    await context.SaveChangesAsync();
+                }
+
+                if(!context.DeliveryMethods.Any()) // check if there is any brand in our databsae
+                {
+                    // Because this is going to be running from our program class, which is inside our API project folder
+                    var dmData = File.ReadAllText("../Infrastructure/Data/SeedData/delivery.json");
+
+                    var methods = JsonSerializer.Deserialize<List<DeliveryMethod>>(dmData);
+
+                    foreach (var method in methods)
+                    {
+                        context.DeliveryMethods.Add(method);
                     }
                     await context.SaveChangesAsync();
                 }
