@@ -11,6 +11,9 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
   @Input() type = 'text';
   @Input() label: string;
 
+  // in order to access the validation, we need to get access to the control itself.
+  // And the way that we can do this is to inject it into our constructor here. And that means we'll be able to access its properties and validated inside these components.
+  // if we use the self decorator here, it's only going to use this inside itself and not look for any other shared dependency that's already in use.
   constructor(@Self() public controlDir: NgControl) {
     this.controlDir.valueAccessor = this;
   }
