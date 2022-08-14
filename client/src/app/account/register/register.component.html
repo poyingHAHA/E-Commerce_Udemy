@@ -1,1 +1,21 @@
-<p>register works!</p>
+<div class="d-flex justify-content-center mt-5">
+  <div class="col-2">
+    <!-- And what we want to add here is a form group to tell our element here, that it's part
+         of a form group and the error goes away and will set this equel to our loginForm.-->
+    <!-- Now this ngSubmit is a form feature. It's coming from the form group directive.
+        And this means that if we've got a button inside the form and we click on this button, then that's
+        going to call this onSubmit method we have up here.-->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="text-center mb-4">
+        <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+      </div>
+
+      <app-text-input formControlName="displayName" [label]="'Display Name'"></app-text-input>
+      <app-text-input formControlName="email" [label]="'Email Address'"></app-text-input>
+      <app-text-input formControlName="password" [label]="'Password'" [type]="'password'"></app-text-input>
+
+      <button [disabled]="registerForm.invalid" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+    </form>
+  </div>
+</div>
+
