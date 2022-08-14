@@ -18,6 +18,8 @@ export class LoginComponent implements OnInit {
   }
 
   createLoginForm(){
+    // FormControl is an entity that tracks the value and the validation status of an individual form control.
+    // And we want that information to still come back inside our login form component.
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.pattern('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')]),
       password: new FormControl('', Validators.required)
