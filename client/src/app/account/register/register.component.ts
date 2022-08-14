@@ -10,6 +10,7 @@ import { AccountService } from '../account.service';
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
+  errors: string[]
 
   // FormBuilder make create form slightly easier
   constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router) {
@@ -32,7 +33,10 @@ export class RegisterComponent implements OnInit {
   onSubmit(){
     this.accountService.register(this.registerForm.value).subscribe({
       next: response => this.router.navigateByUrl('/shop'),
-      error: error => console.log(error)
+      error: error => {
+        console.log(error);
+        this.errors = error.errors;
+      }
     })
   }
 
