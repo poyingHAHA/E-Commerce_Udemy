@@ -48,5 +48,23 @@ namespace Infrastructure.Data
         {
             return SpecificationEvaluator<T>.GetQuery(this.context.Set<T>().AsQueryable(), spec);
         }
+
+        public void Add(T entity)
+        {
+            this.context.Set<T>().Add(entity);
+        }
+
+        public void Update(T entity)
+        {
+            this.context.Set<T>().Attach(entity);
+            // This marks the entity as modified in some way and again, because it's being tracked,
+            // It's going to be added to the list of things that need to be saved when safe changes async is called
+            this.context.Entry(entity).State = EntityState.Modified;
+        }
+
+        public void Delete(T entity)
+        {
+            this.context.Set<T>().Remove(entity);
+        }
     }
 }
