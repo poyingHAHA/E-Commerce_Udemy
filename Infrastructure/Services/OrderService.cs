@@ -10,17 +10,14 @@ namespace Infrastructure.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly IGenericRepository<Order> orderRepo;
-        private readonly IGenericRepository<DeliveryMethod> dmRepo;
-        private readonly IGenericRepository<Product> productRepo;
         private readonly IBasketRepository basketRepo;
+        private readonly IUnitOfWork unitOfWork;
 
-        public OrderService(IGenericRepository<Order> orderRepo, IGenericRepository<DeliveryMethod> dmRepo, IGenericRepository<Product> productRepo, IBasketRepository basketRepo)
+        public OrderService(IBasketRepository basketRepo, IUnitOfWork unitOfWork)
         {
-            this.orderRepo = orderRepo;
-            this.dmRepo = dmRepo;
-            this.productRepo = productRepo;
+            
             this.basketRepo = basketRepo;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task<Order> CreateOrderAsync(string buyerEmail, long deliveryMethodId, string basketId, Address shoppingAddress)
@@ -32,22 +29,33 @@ namespace Infrastructure.Services
             var items = new List<OrderItem>();
             foreach (var item in basket.Items)
             {
-                var productItem = await this.productRepo.GetByIdAsync(item.Id);
+                var productItem = await this.unitOfWork.Repository<Product>().GetByIdAsync(item.Id);
                 var itemOrdered = new ProductItemOrdered(productItem.Id, productItem.Name, productItem.PictureUrl);
                 var orderItem = new OrderItem(itemOrdered, productItem.Price, item.Quantity);
                 items.Add(orderItem);
             }
             // get delivery method from repo
-            var deliveryMethod = await this.dmRepo.GetByIdAsync(deliveryMethodId);
+            var deliveryMethod = await this.unitOfWork.Repository<DeliveryMethod>().GetByIdAsync(deliveryMethodId);
 
             // calc subtotal
             var subtotal = items.Sum(i => i.Price * i.Quantity);
 
             // create order
             var order = new Order(items, buyerEmail, shoppingAddress, deliveryMethod, subtotal);
+            this.unitOfWork.Repository<Order>().Add(order);
 
             // TODO: save to db
+            // Because our unit od work owns our context, any changes that attracts by entity framework are going to be saved into a database at this point.
+            var result = await this.unitOfWork.Complete();
+            // So what we guarantee in this unit of work is that all of changes in this method are going to be applied or none of then are.
+            
+            if(result <= 0) // means nothing saved to the database
+            {
+                return null;
+            }
 
+            // delete basket
+            await this.basketRepo.DeleteBasketAsync(basketId);
 
             // return order
             return order;
