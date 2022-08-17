@@ -9,6 +9,6 @@ namespace API.Dtos
     {
         public string BasketId { get; set; }
         public long DeliveryMethodId { get; set; }
-        public AddressDto shopToAddress { get; set; }
+        public AddressDto shipToAddress { get; set; }
     }
 }
