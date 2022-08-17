@@ -4,7 +4,7 @@
       <!-- # is a template reference variable -->
       <app-stepper [linearModeSelected]="false" #appStepper>
         <cdk-step [label]="'Address'">
-          <app-checkout-address></app-checkout-address>
+          <app-checkout-address [checkoutForm]="checkoutForm"></app-checkout-address>
         </cdk-step>
         <cdk-step [label]="'Delivery Method'">
           <app-checkout-delivery></app-checkout-delivery>
