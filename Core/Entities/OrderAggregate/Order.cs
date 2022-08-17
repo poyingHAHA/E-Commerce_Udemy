@@ -28,6 +28,9 @@ namespace Core.Entities.OrderAggregate
         public decimal Subtotal { get; set; }
         public OrderStatus Status { get; set;} = OrderStatus.Pending;
         public string? PaymentIntentId { get; set; }
+
+        // If Automapper sees something called get+whatever, then it s also going to run this code inside here 
+        // and get the total and populate that into a property called Total.
         public decimal GetTotal()
         {
             return Subtotal + DeliveryMethod.Price;
