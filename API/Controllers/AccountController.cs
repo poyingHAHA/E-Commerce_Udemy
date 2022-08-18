@@ -59,7 +59,7 @@ namespace API.Controllers
         {
             // var email = HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
             var user = await this.userManager.FindByUserByClaimsPrincipleWithAddressAsync(HttpContext.User);
-
+            
             return this.mapper.Map<Address, AddressDto>(user.Address);
         }
 

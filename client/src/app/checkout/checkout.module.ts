@@ -9,6 +9,7 @@ import { CheckoutReviewComponent } from './checkout-review/checkout-review.compo
 import { CheckoutPaymentComponent } from './checkout-payment/checkout-payment.component';
 import { CheckoutSuccessComponent } from './checkout-success/checkout-success.component';
 import { RouterModule } from '@angular/router';
+import { AccountModule } from '../account/account.module';
 
 
 
@@ -25,7 +26,8 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     CheckoutRoutingModule,
     SharedModule,
-    RouterModule
+    RouterModule,
+    AccountModule
   ]
 })
 export class CheckoutModule { }
