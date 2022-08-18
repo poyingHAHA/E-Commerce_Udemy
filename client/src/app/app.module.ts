@@ -1,3 +1,4 @@
+import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -32,7 +33,8 @@ import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
     // We actually want to add this to a list of HTP interceptors. And what we need to specify is multi. And we'll need to set this to true so the ours isn't the only http interceptor in that list.
     // it's got the ones that come with Angella as well.
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })
