@@ -23,12 +23,23 @@ export class BasketService {
 
   constructor(private http: HttpClient) { }
 
+  createPaymentIntent(){
+    return this.http.post(this.baseUrl + 'payments/' + this.getCurrentBasketValue().id, {})
+      .pipe(
+        map((basket: IBasket) => {
+          // update our baskets with the basket we get back, and this means our basket is going to have the Payment intent ID plus the client secret as well.
+          this.basketSource.next(basket);
+          console.log(this.getCurrentBasketValue());
+        })
+      )
+  }
+
   setShippingPrice(deliveryMethod: IDeliveryMethod){
     this.shipping = deliveryMethod.price;
     const basket = this.getCurrentBasketValue();
     basket.deliveryMethodId = deliveryMethod.id;
     this.calculateTotals();
-    this.setBasket(basket); 
+    this.setBasket(basket);
   }
 
   getBasket(id: string){
