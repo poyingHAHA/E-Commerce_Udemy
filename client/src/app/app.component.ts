@@ -28,7 +28,6 @@ export class AppComponent implements OnInit {
   loadBasket(){
     const basketid = localStorage.getItem('basket_id');
     if(basketid) {
-      console.log(basketid)
       this.basketService.getBasket(basketid).subscribe({
         next: res => {
           console.log("load basket")

@@ -29,7 +29,6 @@ export class BasketService {
         map((basket: IBasket) => {
           // update our baskets with the basket we get back, and this means our basket is going to have the Payment intent ID plus the client secret as well.
           this.basketSource.next(basket);
-          console.log(this.getCurrentBasketValue());
         })
       )
   }
@@ -47,7 +46,6 @@ export class BasketService {
   getBasket(id: string){
     return this.http.get(this.baseUrl + 'basket?id=' + id).pipe(
       map((basket: IBasket) => {
-        console.log(basket);
         this.basketSource.next(basket);
         this.shipping = basket.shippingPrice;
         this.calculateTotals();
