@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -7,17 +7,52 @@ import { IBasket } from 'src/app/shared/models/basket';
 import { IOrder } from 'src/app/shared/models/order';
 import { CheckoutService } from '../checkout.service';
 
+// And we do this so that we don't get any complaints inside here.
+declare var Stripe;
+
 @Component({
   selector: 'app-checkout-payment',
   templateUrl: './checkout-payment.component.html',
   styleUrls: ['./checkout-payment.component.scss']
 })
-export class CheckoutPaymentComponent implements OnInit {
+export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
   @Input() checkoutForm: FormGroup;
+  // get access to the template reference variables we created
+  // the static is true in this case, we're not going to be attempting to use ngIf for any structural components on this.
+  @ViewChild('cardNumber', {static: true}) cardNumberElement: ElementRef;
+  @ViewChild('cardExpiry', {static: true}) cardExpiryElement: ElementRef;
+  @ViewChild('cardCvc', {static: true}) cardCvcElement: ElementRef;
+  stripe: any;
+  cardNumber: any;
+  cardCvc: any;
+  cardExpiry: any;
+  cardErrors: any;
 
   constructor(private basketService: BasketService, private checkoutService: CheckoutService, private toastr: ToastrService, private router: Router) { }
 
-  ngOnInit(): void {
+  // this gives our HTML a chance to initialize and then we can mount the strip elements on top of them.
+  ngAfterViewInit() {
+    // paste in publishable key
+    this.stripe = Stripe('pk_test_51LYPfNKJgqG7raYbDj3cNanH9xjDu0RTaylhDaaR1ioIYDRktxlwZoGdRWgD3UfnJlJ0QD5K14izxyoHnOxklkyO00K1KmCTZg');
+    const elements = this.stripe.elements();
+
+    // this is stripe's element functionality
+    // we mount's the stripe elements onto our native cardNumberElement on our HTML page
+    this.cardNumber = elements.create('cardNumber')
+    this.cardNumber.mount(this.cardNumberElement.nativeElement)
+
+    this.cardExpiry = elements.create('cardExpiry')
+    this.cardExpiry.mount(this.cardExpiryElement.nativeElement)
+
+    this.cardCvc = elements.create('cardCvc')
+    this.cardCvc.mount(this.cardCvcElement.nativeElement)
+  }
+
+  // what we want to do is, is dispose of what we're creating in here when the components is disposed of as well.
+  ngOnDestroy(){
+    this.cardNumber.destroy();
+    this.cardExpiry.destroy();
+    this.cardCvc.destroy();
   }
 
   submitOrder(){
