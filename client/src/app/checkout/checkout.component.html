@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-8">
       <!-- # is a template reference variable -->
-      <app-stepper [linearModeSelected]="false" #appStepper>
+      <app-stepper [linearModeSelected]="true" #appStepper>
         <!-- [completed]='determine when the step is completed'] -->
         <cdk-step [label]="'Address'" [completed]="(checkoutForm.get('addressForm')).valid">
           <app-checkout-address [checkoutForm]="checkoutForm"></app-checkout-address>
