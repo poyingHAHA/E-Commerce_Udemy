@@ -80,9 +80,23 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
     this.checkoutService.createOrder(orderToCreate).subscribe({
       next: (order: IOrder) => {
         this.toastr.success('Order created successfully');
-        this.basketService.deleteLocalBasket(basket.id);
-        const navigationExtras: NavigationExtras = {state: order};
-        this.router.navigate(['checkout/success'], navigationExtras)
+        this.stripe.confirmCardPayment(basket.clientSecret, {
+          payment_method: {
+            card: this.cardNumber, // using 4242 4242 4242 4242 as the test card number for success payment
+            billing_details: {
+              name: this.checkoutForm.get('paymentForm').get('nameOnCard').value
+            }
+          }
+        }).then(result => {
+          console.log(result);
+          if(result.paymentIntent){
+            this.basketService.deleteLocalBasket(basket.id);
+            const navigationExtras: NavigationExtras = {state: order};
+            this.router.navigate(['checkout/success'], navigationExtras);
+          }else{
+            this.toastr.error('Payment error');
+          }
+        });
       },
       error: error => {
         this.toastr.error(error.message);
