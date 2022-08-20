@@ -17,8 +17,8 @@ export class CheckoutComponent implements OnInit {
   constructor(private fb: FormBuilder, private accountService: AccountService, private basketService: BasketService) { }
 
   ngOnInit(): void {
-    this.getAddressFormValues();
     this.createCheckoutForm();
+    this.getAddressFormValues();
     this.getDeliveryMethodValue();
     this.basketTotals$ = this.basketService.basketTotal$;
   }
@@ -57,6 +57,7 @@ export class CheckoutComponent implements OnInit {
 
   getDeliveryMethodValue(){
     const basket = this.basketService.getCurrentBasketValue();
+    console.log(basket);
     if(basket.deliveryMethodId !== null){
       this.checkoutForm.get('deliveryForm').get('deliveryMethod').patchValue(basket.deliveryMethodId.toString());
     }

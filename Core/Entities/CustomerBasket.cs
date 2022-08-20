@@ -25,6 +25,7 @@ namespace Core.Entities
         // we'll use this one to be able to update the payment intent if the client makes a change to the delivery method, to the order in any way, 
         // they go back to the basket, they add more stuff in after they've already created a payment intent, then we're going to want to update that payment intent rather than creating a new one.
         public string PaymentIntentId { get; set; }
+        public decimal ShippingPrice { get; set; }
 
     }
 }
