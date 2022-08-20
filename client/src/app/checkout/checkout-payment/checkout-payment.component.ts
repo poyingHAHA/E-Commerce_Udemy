@@ -27,6 +27,7 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
   cardCvc: any;
   cardExpiry: any;
   cardErrors: any;
+  cardHandler = this.onChange.bind(this);
 
   constructor(private basketService: BasketService, private checkoutService: CheckoutService, private toastr: ToastrService, private router: Router) { }
 
@@ -40,12 +41,19 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
     // we mount's the stripe elements onto our native cardNumberElement on our HTML page
     this.cardNumber = elements.create('cardNumber')
     this.cardNumber.mount(this.cardNumberElement.nativeElement)
+    // So each one of these is going to have its own event listener looking for any changes inside this particular element,
+    // and we're going to use our carHandler, which is going to call onChange event. And if we get any errors, then it's going to populate the this.cardErrors.
+    this.cardNumber.addEventListener('change', this.cardHandler)
 
     this.cardExpiry = elements.create('cardExpiry')
     this.cardExpiry.mount(this.cardExpiryElement.nativeElement)
+    this.cardExpiry.addEventListener('change', this.cardHandler)
+
 
     this.cardCvc = elements.create('cardCvc')
     this.cardCvc.mount(this.cardCvcElement.nativeElement)
+    this.cardCvc.addEventListener('change', this.cardHandler)
+
   }
 
   // what we want to do is, is dispose of what we're creating in here when the components is disposed of as well.
@@ -53,6 +61,17 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
     this.cardNumber.destroy();
     this.cardExpiry.destroy();
     this.cardCvc.destroy();
+  }
+
+  // this is known as Destructuring
+  // So unchange is going to receive an object of some description. And inside that object is going to be a property called error.
+  // And that property is the one we're interested in.
+  onChange({error}) {
+    if(error){
+      this.cardErrors = error.message;
+    }else{
+      this.cardErrors = null;
+    }
   }
 
   submitOrder(){
